@@ -36,7 +36,8 @@
   </div>
 
   <div id="app-screen" class="app-screen hidden">
-    <aside class="sidebar">
+    <div id="sidebar-backdrop" class="sidebar-backdrop hidden"></div>
+    <aside class="sidebar" id="sidebar">
       <div class="sidebar-header">
         <span class="logo">🏫</span>
         <span class="brand">ADM de Sala</span>
@@ -60,7 +61,10 @@
 
     <main class="main">
       <header class="topbar">
-        <h1 id="section-title">Dashboard</h1>
+        <div class="topbar-left">
+          <button id="menu-toggle-btn" class="menu-toggle" aria-label="Abrir menu">☰</button>
+          <h1 id="section-title">Dashboard</h1>
+        </div>
         <button id="theme-toggle" class="theme-toggle" title="Alternar tema">🌙</button>
       </header>
 

@@ -58,6 +58,8 @@ let weekFilter = { salaId: "", professorId: "" };
 
 let _confirmCallback = null;
 
+let _lastSavedIds = [];
+
 function loadState() {
   const raw = localStorage.getItem(STORAGE_KEY);
   if (raw) {
@@ -82,24 +84,53 @@ function uid() {
 function seedData() {
   const salaA = { id: uid(), nome: "Sala 101", capacidade: 40 };
   const salaB = { id: uid(), nome: "Sala 102", capacidade: 35 };
-  const salaC = { id: uid(), nome: "Laboratório de Informática", capacidade: 25 };
-  const salaD = { id: uid(), nome: "Auditório", capacidade: 90 };
+  const salaC = { id: uid(), nome: "Sala 103", capacidade: 38 };
+  const salaD = { id: uid(), nome: "Laboratório de Informática", capacidade: 25 };
+  const salaE = { id: uid(), nome: "Auditório", capacidade: 90 };
+  const salaF = { id: uid(), nome: "Quadra Poliesportiva", capacidade: 60 };
 
   const profA = { id: uid(), nome: "Ana Paula Ribeiro", disciplina: "Matemática" };
   const profB = { id: uid(), nome: "Carlos Eduardo Souza", disciplina: "História" };
   const profC = { id: uid(), nome: "Fernanda Lima", disciplina: "Informática" };
+  const profD = { id: uid(), nome: "Juliana Costa Pereira", disciplina: "Português" };
+  const profE = { id: uid(), nome: "Ricardo Nogueira Santos", disciplina: "Ciências" };
+  const profF = { id: uid(), nome: "Bruno Alves Martins", disciplina: "Educação Física" };
 
   const turmaA = { id: uid(), nome: "1º Ano A", disciplina: "Matemática", professorId: profA.id, numAlunos: 35 };
-  const turmaB = { id: uid(), nome: "2º Ano B", disciplina: "História", professorId: profB.id, numAlunos: 30 };
-  const turmaC = { id: uid(), nome: "3º Ano C", disciplina: "Informática", professorId: profC.id, numAlunos: 30 };
+  const turmaB = { id: uid(), nome: "1º Ano B", disciplina: "Português", professorId: profD.id, numAlunos: 32 };
+  const turmaC = { id: uid(), nome: "2º Ano A", disciplina: "Ciências", professorId: profE.id, numAlunos: 28 };
+  const turmaD = { id: uid(), nome: "2º Ano B", disciplina: "História", professorId: profB.id, numAlunos: 30 };
+  const turmaE = { id: uid(), nome: "3º Ano A", disciplina: "Educação Física", professorId: profF.id, numAlunos: 34 };
+  const turmaF = { id: uid(), nome: "3º Ano C", disciplina: "Informática", professorId: profC.id, numAlunos: 30 };
 
-  state.salas = [salaA, salaB, salaC, salaD];
-  state.professores = [profA, profB, profC];
-  state.turmas = [turmaA, turmaB, turmaC];
+  state.salas = [salaA, salaB, salaC, salaD, salaE, salaF];
+  state.professores = [profA, profB, profC, profD, profE, profF];
+  state.turmas = [turmaA, turmaB, turmaC, turmaD, turmaE, turmaF];
   state.alocacoes = [
     { id: uid(), turmaId: turmaA.id, salaId: salaA.id, dia: "Segunda", inicio: "07:00", fim: "07:50" },
+    { id: uid(), turmaId: turmaA.id, salaId: salaA.id, dia: "Terça", inicio: "07:00", fim: "07:50" },
+    { id: uid(), turmaId: turmaA.id, salaId: salaA.id, dia: "Quarta", inicio: "07:00", fim: "07:50" },
+    { id: uid(), turmaId: turmaA.id, salaId: salaA.id, dia: "Sexta", inicio: "08:40", fim: "09:30" },
+
     { id: uid(), turmaId: turmaB.id, salaId: salaB.id, dia: "Segunda", inicio: "07:50", fim: "08:40" },
-    { id: uid(), turmaId: turmaC.id, salaId: salaC.id, dia: "Terça", inicio: "07:00", fim: "07:50" },
+    { id: uid(), turmaId: turmaB.id, salaId: salaB.id, dia: "Quarta", inicio: "07:50", fim: "08:40" },
+    { id: uid(), turmaId: turmaB.id, salaId: salaB.id, dia: "Quinta", inicio: "07:00", fim: "07:50" },
+
+    { id: uid(), turmaId: turmaC.id, salaId: salaC.id, dia: "Segunda", inicio: "08:40", fim: "09:30" },
+    { id: uid(), turmaId: turmaC.id, salaId: salaC.id, dia: "Terça", inicio: "09:50", fim: "10:40" },
+    { id: uid(), turmaId: turmaC.id, salaId: salaC.id, dia: "Sexta", inicio: "07:00", fim: "07:50" },
+
+    { id: uid(), turmaId: turmaD.id, salaId: salaB.id, dia: "Segunda", inicio: "09:50", fim: "10:40" },
+    { id: uid(), turmaId: turmaD.id, salaId: salaB.id, dia: "Quarta", inicio: "09:50", fim: "10:40" },
+    { id: uid(), turmaId: turmaD.id, salaId: salaB.id, dia: "Quinta", inicio: "08:40", fim: "09:30" },
+
+    { id: uid(), turmaId: turmaE.id, salaId: salaF.id, dia: "Terça", inicio: "10:40", fim: "11:30" },
+    { id: uid(), turmaId: turmaE.id, salaId: salaF.id, dia: "Quinta", inicio: "10:40", fim: "11:30" },
+    { id: uid(), turmaId: turmaE.id, salaId: salaF.id, dia: "Sábado", inicio: "07:00", fim: "07:50" },
+
+    { id: uid(), turmaId: turmaF.id, salaId: salaD.id, dia: "Segunda", inicio: "10:40", fim: "11:30" },
+    { id: uid(), turmaId: turmaF.id, salaId: salaD.id, dia: "Quarta", inicio: "10:40", fim: "11:30" },
+    { id: uid(), turmaId: turmaF.id, salaId: salaD.id, dia: "Sexta", inicio: "09:50", fim: "10:40" },
   ];
 }
 

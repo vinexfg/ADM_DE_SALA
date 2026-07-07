@@ -9,9 +9,11 @@ function renderTurmas() {
     return matchesSearch(searchState.turmas, t.nome, t.disciplina, prof ? prof.nome : "");
   });
 
+  const flashIds = consumeFlashIds();
+
   const rows = filtradas.map((t) => {
     return `
-    <tr>
+    <tr class="${flashClass(t.id, flashIds).trim()}">
       <td class="cell-strong">${escapeHtml(t.nome)}</td>
       <td class="muted-cell">${escapeHtml(t.disciplina || "-")}</td>
       <td>${professorAvatarHtml(t.professorId)}</td>
@@ -36,10 +38,12 @@ function renderTurmas() {
         </div>
       </div>
       ${filtradas.length === 0 ? `<div class="empty-state"><span class="empty-icon">🎓</span>${state.turmas.length === 0 ? "Nenhuma turma cadastrada." : "Nenhuma turma encontrada para essa busca."}</div>` : `
+      <div class="table-scroll">
       <table>
         <thead><tr><th>Turma</th><th>Disciplina</th><th>Professor</th><th>Alunos</th><th></th></tr></thead>
         <tbody>${rows}</tbody>
-      </table>`}
+      </table>
+      </div>`}
     </div>
   `;
 }
@@ -97,9 +101,12 @@ function saveTurma(id) {
     turma.disciplina = disciplina;
     turma.professorId = professorId;
     turma.numAlunos = numAlunos;
+    _lastSavedIds = [id];
     toast("Turma atualizada.", "success");
   } else {
-    state.turmas.push({ id: uid(), nome, disciplina, professorId, numAlunos });
+    const turma = { id: uid(), nome, disciplina, professorId, numAlunos };
+    state.turmas.push(turma);
+    _lastSavedIds = [turma.id];
     toast("Turma cadastrada.", "success");
   }
   saveState();

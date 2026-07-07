@@ -6,8 +6,10 @@ function renderSalas() {
 
   const filtradas = state.salas.filter((s) => matchesSearch(searchState.salas, s.nome));
 
+  const flashIds = consumeFlashIds();
+
   const rows = filtradas.map((s) => `
-    <tr>
+    <tr class="${flashClass(s.id, flashIds).trim()}">
       <td><span class="name-with-dot"><span class="color-dot" style="--dot-color:${salaColorVar(s.id)};"></span>${escapeHtml(s.nome)}</span></td>
       <td class="muted-cell time-cell">${s.capacidade ?? "-"}</td>
       <td class="actions-cell">
@@ -30,10 +32,12 @@ function renderSalas() {
         </div>
       </div>
       ${filtradas.length === 0 ? `<div class="empty-state"><span class="empty-icon">🏫</span>${state.salas.length === 0 ? "Nenhuma sala cadastrada." : "Nenhuma sala encontrada para essa busca."}</div>` : `
+      <div class="table-scroll">
       <table>
         <thead><tr><th>Nome</th><th>Capacidade</th><th></th></tr></thead>
         <tbody>${rows}</tbody>
-      </table>`}
+      </table>
+      </div>`}
     </div>
   `;
 }
@@ -68,9 +72,12 @@ function saveSala(id) {
     const sala = getSala(id);
     sala.nome = nome;
     sala.capacidade = isNaN(capacidade) ? null : capacidade;
+    _lastSavedIds = [id];
     toast("Sala atualizada.", "success");
   } else {
-    state.salas.push({ id: uid(), nome, capacidade: isNaN(capacidade) ? null : capacidade });
+    const sala = { id: uid(), nome, capacidade: isNaN(capacidade) ? null : capacidade };
+    state.salas.push(sala);
+    _lastSavedIds = [sala.id];
     toast("Sala cadastrada.", "success");
   }
   saveState();

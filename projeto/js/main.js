@@ -32,6 +32,22 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.querySelectorAll(".nav-btn").forEach((btn) => {
-    btn.addEventListener("click", () => navigateTo(btn.dataset.section));
+    btn.addEventListener("click", () => {
+      navigateTo(btn.dataset.section);
+      closeSidebar();
+    });
   });
+
+  document.getElementById("menu-toggle-btn").addEventListener("click", openSidebar);
+  document.getElementById("sidebar-backdrop").addEventListener("click", closeSidebar);
 });
+
+function openSidebar() {
+  document.getElementById("sidebar").classList.add("open");
+  document.getElementById("sidebar-backdrop").classList.remove("hidden");
+}
+
+function closeSidebar() {
+  document.getElementById("sidebar").classList.remove("open");
+  document.getElementById("sidebar-backdrop").classList.add("hidden");
+}

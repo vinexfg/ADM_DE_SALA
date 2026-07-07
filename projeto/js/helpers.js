@@ -56,3 +56,13 @@ function onSearchInput(section, value) {
     input.setSelectionRange(pos, pos);
   }
 }
+
+function consumeFlashIds() {
+  const ids = _lastSavedIds;
+  _lastSavedIds = [];
+  return ids;
+}
+
+function flashClass(id, flashIds) {
+  return flashIds.includes(id) ? " row-flash" : "";
+}

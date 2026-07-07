@@ -22,8 +22,14 @@
 }
 .toast::before { font-size: 0.875rem; flex-shrink: 0; }
 .toast-success { background: var(--good-bg); color: var(--good); }
-.toast-success::before { content: "✓"; }
+.toast-success::before { content: "✓"; display: inline-block; animation: check-pop 0.4s var(--ease) 0.15s backwards; }
 .toast-error { background: var(--critical-bg); color: var(--critical); }
 .toast-error::before { content: "⚠"; }
 .toast-info { background: var(--surface); color: var(--text-primary); border-color: var(--border-strong); }
 .toast-info::before { content: "ℹ"; }
+
+@keyframes check-pop {
+  0% { transform: scale(0); }
+  60% { transform: scale(1.3); }
+  100% { transform: scale(1); }
+}

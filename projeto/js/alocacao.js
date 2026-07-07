@@ -47,13 +47,15 @@ function renderAlocacao() {
     return matchesSearch(searchState.alocacao, turma ? turma.nome : "", sala ? sala.nome : "", prof ? prof.nome : "", a.dia);
   });
 
+  const flashIds = consumeFlashIds();
+
   const rows = filtradas
     .slice()
     .sort((a, b) => DIAS.indexOf(a.dia) - DIAS.indexOf(b.dia) || timeToMinutes(a.inicio) - timeToMinutes(b.inicio))
     .map((a) => {
       const turma = getTurma(a.turmaId);
       return `
-      <tr>
+      <tr class="${flashClass(a.id, flashIds).trim()}">
         <td class="cell-strong">${turma ? escapeHtml(turma.nome) : "<em>turma removida</em>"}</td>
         <td>${turma ? professorAvatarHtml(turma.professorId) : "-"}</td>
         <td>${salaDotHtml(a.salaId)}</td>
@@ -85,10 +87,12 @@ function renderAlocacao() {
         </div>
       </div>
       ${filtradas.length === 0 ? `<div class="empty-state"><span class="empty-icon">🗓️</span>${state.alocacoes.length === 0 ? "Nenhum horário alocado ainda." : "Nenhuma alocação encontrada para essa busca."}</div>` : `
+      <div class="table-scroll">
       <table>
         <thead><tr><th>Turma</th><th>Professor</th><th>Sala</th><th>Dia</th><th>Horário</th><th></th></tr></thead>
         <tbody>${rows}</tbody>
-      </table>`}
+      </table>
+      </div>`}
     </div>
     <div class="card">
       <div class="section-header">
@@ -306,9 +310,12 @@ function saveAlocacao(id) {
   if (id) {
     const aloc = state.alocacoes.find((a) => a.id === id);
     Object.assign(aloc, { turmaId, salaId, dia: dias[0], inicio, fim });
+    _lastSavedIds = [id];
     toast("Alocação atualizada.", "success");
   } else {
-    dias.forEach((dia) => state.alocacoes.push({ id: uid(), turmaId, salaId, dia, inicio, fim }));
+    const novas = dias.map((dia) => ({ id: uid(), turmaId, salaId, dia, inicio, fim }));
+    novas.forEach((aloc) => state.alocacoes.push(aloc));
+    _lastSavedIds = novas.map((aloc) => aloc.id);
     toast(dias.length > 1 ? `Alocação criada em ${dias.length} dias, sem conflitos.` : "Alocação criada sem conflitos.", "success");
   }
   saveState();

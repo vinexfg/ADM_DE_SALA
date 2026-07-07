@@ -6,8 +6,10 @@ function renderProfessores() {
 
   const filtrados = state.professores.filter((p) => matchesSearch(searchState.professores, p.nome, p.disciplina));
 
+  const flashIds = consumeFlashIds();
+
   const rows = filtrados.map((p) => `
-    <tr>
+    <tr class="${flashClass(p.id, flashIds).trim()}">
       <td>${professorAvatarHtml(p.id)}</td>
       <td class="muted-cell">${escapeHtml(p.disciplina || "-")}</td>
       <td class="actions-cell">
@@ -30,10 +32,12 @@ function renderProfessores() {
         </div>
       </div>
       ${filtrados.length === 0 ? `<div class="empty-state"><span class="empty-icon">👨‍🏫</span>${state.professores.length === 0 ? "Nenhum professor cadastrado." : "Nenhum professor encontrado para essa busca."}</div>` : `
+      <div class="table-scroll">
       <table>
         <thead><tr><th>Nome</th><th>Disciplina</th><th></th></tr></thead>
         <tbody>${rows}</tbody>
-      </table>`}
+      </table>
+      </div>`}
     </div>
   `;
 }
@@ -68,9 +72,12 @@ function saveProfessor(id) {
     const prof = getProfessor(id);
     prof.nome = nome;
     prof.disciplina = disciplina;
+    _lastSavedIds = [id];
     toast("Professor atualizado.", "success");
   } else {
-    state.professores.push({ id: uid(), nome, disciplina });
+    const prof = { id: uid(), nome, disciplina };
+    state.professores.push(prof);
+    _lastSavedIds = [prof.id];
     toast("Professor cadastrado.", "success");
   }
   saveState();
