@@ -18,10 +18,10 @@ Não há `package.json`, build step, linter ou suíte de testes configurados nes
 
 ### Carregamento de scripts (ordem importa)
 
-`index.html` carrega 11 arquivos de `projeto/js/` como `<script>` clássicos (sem `type="module"`), todos compartilhando o mesmo escopo global `window`. A ordem em `index.html` é:
+`index.html` carrega 12 arquivos de `projeto/js/` como `<script>` clássicos (sem `type="module"`), todos compartilhando o mesmo escopo global `window`. A ordem em `index.html` é:
 
 ```
-state.js → theme.js → helpers.js → ui.js → auth.js → nav.js →
+state.js → theme.js → helpers.js → ui.js → data-io.js → auth.js → nav.js →
 dashboard.js → salas.js → professores.js → turmas.js → alocacao.js → main.js
 ```
 
@@ -43,7 +43,11 @@ Formulários e confirmações usam um modal genérico (`js/ui.js`: `openModal`/`
 
 ### Autenticação e permissões (`js/auth.js`, `js/state.js`)
 
-Login é só por senha (sem usuário), mapeada para um papel em `PASSWORDS` (`state.js`): `"123"` → `admin`, `"356"` → `pedagogico`. O objeto `PERMISSIONS` define o que cada papel pode fazer (`manageSalas`, `manageProfessores`, `manageTurmas`, `manageAlocacoes`). A função `can(permission)` (em `auth.js`) é checada tanto na renderização (para esconder botões) quanto no início de cada função de escrita (`openXForm`, `saveX`, `deleteX`) como segunda camada de proteção. `pedagogico` pode gerenciar alocações mas nunca criar/editar/excluir turmas.
+Login é só por senha (sem usuário), mapeada para um papel em `PASSWORDS` (`state.js`): `"123"` → `admin`, `"456"` → `pedagogico`. O objeto `PERMISSIONS` define o que cada papel pode fazer (`manageSalas`, `manageProfessores`, `manageTurmas`, `manageAlocacoes`). A função `can(permission)` (em `auth.js`) é checada tanto na renderização (para esconder botões) quanto no início de cada função de escrita (`openXForm`, `saveX`, `deleteX`) como segunda camada de proteção. `pedagogico` pode gerenciar alocações mas nunca criar/editar/excluir turmas.
+
+### Exportar/Importar dados (`js/data-io.js`)
+
+`exportData()` baixa o `state` inteiro como `.json`. `handleImportFile()` valida a estrutura do arquivo (precisa ter `salas`/`professores`/`turmas`/`alocacoes` como arrays) antes de pedir confirmação e substituir `state` por completo — mesmo padrão de "tudo ou nada" usado na alocação multi-dia.
 
 ### Núcleo de negócio: detecção de conflitos (`js/alocacao.js`)
 
@@ -55,6 +59,10 @@ A regra central do sistema é impedir alocações conflitantes. `findRoomConflic
 
 `PERIODOS` (em `state.js`) define horários fixos pré-definidos (1º ao 8º horário); o formulário permite cair para um horário "Personalizado" quando o horário não bate com nenhum período fixo (`findPeriodoForTimes`).
 
-### Estilo (`style.css`)
+### Estilo (`projeto/css/`)
 
-Tema claro/escuro via atributo `data-theme` na tag `<html>` (alternado por `js/theme.js`, persistido em `localStorage`), com fallback para `prefers-color-scheme` quando não há preferência salva. Todas as cores são custom properties CSS redefinidas por tema. Existe uma paleta categórica fixa (`--cat-1` a `--cat-8`) usada para colorir salas de forma consistente em toda a UI (lista de salas, tabela de alocação, grade semanal) — a cor de cada sala é derivada da sua posição no array `state.salas` (`salaColorVar()` em `js/helpers.js`), não é armazenada no dado. Todas as unidades de tamanho usam `rem` (base 16px), não `px`.
+Assim como o JS, o CSS é dividido em 11 arquivos por assunto, carregados via `<link>` em `index.html` nesta ordem: `tokens.css` (custom properties) → `base.css` (reset + keyframes compartilhados) → `buttons.css` → `forms.css` → `login.css` → `layout.css` (app shell: sidebar/topbar/main) → `components.css` (card, tabela, chips, avatar, `.color-dot`) → `weekly.css` (grade semanal) → `modal.css` → `toast.css` → `print.css`. A ordem só importa porque `tokens.css` define as custom properties que todo o resto consome — não há conflito de especificidade relevante entre os arquivos.
+
+Tema claro/escuro via atributo `data-theme` na tag `<html>` (alternado por `js/theme.js`, persistido em `localStorage`), com fallback para `prefers-color-scheme` quando não há preferência salva. Todas as cores são custom properties CSS redefinidas por tema (`tokens.css`). Existe uma paleta categórica fixa (`--cat-1` a `--cat-8`) usada para colorir salas de forma consistente em toda a UI (lista de salas, tabela de alocação, grade semanal) — a cor de cada sala é derivada da sua posição no array `state.salas` (`salaColorVar()` em `js/helpers.js`) e passada via a custom property `--dot-color`/`--slot-color`/`--tile-color` inline no HTML gerado; a cor em si nunca é armazenada no dado. Todas as unidades de tamanho usam `rem` (base 16px), não `px`.
+
+Classes utilitárias para evitar `style="..."` inline nos arquivos JS: `.header-actions` / `.header-actions--wrap` (agrupar busca + botão no cabeçalho de seção), `.section-gap` (espaçamento entre cards), `.cell-strong` (célula de tabela em negrito), `.confirm-message` (texto do modal de confirmação). Inline `style="--dot-color:...;"` etc. só é usado para valores realmente dinâmicos (cor calculada por item); qualquer outro estilo repetido deve virar classe em `components.css` em vez de inline no JS.

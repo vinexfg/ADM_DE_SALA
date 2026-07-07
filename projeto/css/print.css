@@ -1,0 +1,25 @@
+.readonly-banner {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--warning-bg);
+  color: var(--warning);
+  border-radius: var(--radius-sm);
+  padding: 0.6875rem 0.875rem;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+.readonly-banner::before { content: "🔒"; font-size: 0.8125rem; }
+
+@media print {
+  .sidebar, .topbar, .search-input, .btn-primary, .btn-ghost, .btn-secondary,
+  .btn-danger, .actions-cell, #toast-container, #modal-overlay,
+  #week-filter-sala, #week-filter-prof, .readonly-banner {
+    display: none !important;
+  }
+  body, .content, .main, .app-screen { background: #fff !important; color: #000 !important; }
+  .app-screen { display: block !important; height: auto !important; }
+  .main, .content { overflow: visible !important; padding: 0 !important; }
+  .card { box-shadow: none !important; border: 0.0625rem solid #ccc !important; break-inside: avoid; }
+}

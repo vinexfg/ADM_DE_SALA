@@ -71,7 +71,7 @@ function closeModal() {
 function openConfirm(message, onConfirm) {
   _confirmCallback = onConfirm;
   openModal("Confirmar exclusão", `
-    <p style="margin:0 0 4px;color:var(--text-secondary);font-size:14px;line-height:1.5;">${message}</p>
+    <p class="confirm-message">${message}</p>
     <div class="modal-actions">
       <button class="btn-secondary" onclick="closeModal()">Cancelar</button>
       <button class="btn-danger" onclick="runConfirm()">Excluir</button>

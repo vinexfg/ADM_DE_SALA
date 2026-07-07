@@ -1,0 +1,82 @@
+input, select, textarea {
+  width: 100%;
+  padding: 0.625rem 0.75rem;
+  border-radius: var(--radius-sm);
+  border: 0.0625rem solid var(--border-strong);
+  background: var(--surface);
+  color: var(--text-primary);
+  font-size: 0.875rem;
+  outline: none;
+  transition: border-color 0.15s var(--ease), box-shadow 0.15s var(--ease);
+}
+
+input::placeholder { color: var(--text-muted); }
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.1875rem var(--focus-ring);
+}
+
+.field { display: flex; flex-direction: column; gap: 0.375rem; margin-bottom: 0.875rem; }
+
+.field label { font-size: 0.78125rem; font-weight: 600; color: var(--text-secondary); }
+
+.field-row { display: flex; gap: 0.75rem; }
+.field-row .field { flex: 1; }
+
+.error-msg {
+  color: var(--critical);
+  background: var(--critical-bg);
+  border-radius: var(--radius-sm);
+  padding: 0.5625rem 0.6875rem;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  margin: 0.125rem 0;
+  display: flex;
+  gap: 0.375rem;
+  align-items: flex-start;
+}
+.error-msg::before { content: "⚠"; flex-shrink: 0; }
+
+.warning-msg {
+  color: var(--warning);
+  background: var(--warning-bg);
+  border-radius: var(--radius-sm);
+  padding: 0.5625rem 0.6875rem;
+  font-size: 0.78125rem;
+  font-weight: 600;
+  margin: -0.375rem 0 0.875rem;
+  display: flex;
+  gap: 0.375rem;
+  align-items: flex-start;
+}
+.warning-msg::before { content: "⚠"; flex-shrink: 0; }
+
+.hint-msg { color: var(--text-muted); font-size: 0.75rem; margin: 0.125rem 0; }
+
+.search-input {
+  width: 13.75rem;
+  padding: 0.5rem 0.75rem;
+}
+
+.day-checkboxes { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.day-check-item {
+  display: flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.4375rem 0.75rem;
+  border-radius: 1.25rem;
+  border: 0.0625rem solid var(--border-strong);
+  background: var(--surface);
+  font-size: 0.78125rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.15s var(--ease), border-color 0.15s var(--ease), color 0.15s var(--ease);
+}
+.day-check-item input { width: auto; margin: 0; accent-color: var(--accent); }
+.day-check-item:has(.day-check:checked) {
+  background: var(--accent-tint);
+  border-color: var(--accent);
+  color: var(--accent);
+}

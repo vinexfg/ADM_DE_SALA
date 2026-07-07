@@ -15,7 +15,7 @@ function salaColorVar(salaId) {
 function salaDotHtml(salaId) {
   const sala = getSala(salaId);
   if (!sala) return `<span class="muted-cell">sala removida</span>`;
-  return `<span class="name-with-dot"><span class="color-dot" style="--dot-color:${salaColorVar(salaId)};background:${salaColorVar(salaId)};"></span>${escapeHtml(sala.nome)}</span>`;
+  return `<span class="name-with-dot"><span class="color-dot" style="--dot-color:${salaColorVar(salaId)};"></span>${escapeHtml(sala.nome)}</span>`;
 }
 
 function initials(name) {

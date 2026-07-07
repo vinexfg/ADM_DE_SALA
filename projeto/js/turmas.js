@@ -12,7 +12,7 @@ function renderTurmas() {
   const rows = filtradas.map((t) => {
     return `
     <tr>
-      <td style="font-weight:600;">${escapeHtml(t.nome)}</td>
+      <td class="cell-strong">${escapeHtml(t.nome)}</td>
       <td class="muted-cell">${escapeHtml(t.disciplina || "-")}</td>
       <td>${professorAvatarHtml(t.professorId)}</td>
       <td class="muted-cell time-cell">${t.numAlunos ?? "-"}</td>
@@ -30,7 +30,7 @@ function renderTurmas() {
     <div class="card">
       <div class="section-header">
         <h2>${state.turmas.length} turma(s) cadastrada(s)</h2>
-        <div style="display:flex;gap:10px;align-items:center;">
+        <div class="header-actions">
           ${searchBoxHtml("turmas", "Buscar turma…")}
           ${canManage ? `<button class="btn-primary" onclick="openTurmaForm()">+ Nova turma</button>` : ""}
         </div>

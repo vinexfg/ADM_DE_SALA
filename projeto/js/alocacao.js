@@ -54,7 +54,7 @@ function renderAlocacao() {
       const turma = getTurma(a.turmaId);
       return `
       <tr>
-        <td style="font-weight:600;">${turma ? escapeHtml(turma.nome) : "<em>turma removida</em>"}</td>
+        <td class="cell-strong">${turma ? escapeHtml(turma.nome) : "<em>turma removida</em>"}</td>
         <td>${turma ? professorAvatarHtml(turma.professorId) : "-"}</td>
         <td>${salaDotHtml(a.salaId)}</td>
         <td><span class="chip chip-accent">${a.dia}</span></td>
@@ -76,10 +76,10 @@ function renderAlocacao() {
   ).join("");
 
   el.innerHTML = `
-    <div class="card" style="margin-bottom:20px;">
+    <div class="card section-gap">
       <div class="section-header">
         <h2>${state.alocacoes.length} horário(s) alocado(s)</h2>
-        <div style="display:flex;gap:10px;align-items:center;">
+        <div class="header-actions">
           ${searchBoxHtml("alocacao", "Buscar turma, sala, professor…")}
           ${canManage ? `<button class="btn-primary" onclick="openAlocacaoForm()">+ Nova alocação</button>` : ""}
         </div>
@@ -93,7 +93,7 @@ function renderAlocacao() {
     <div class="card">
       <div class="section-header">
         <h2>Visão semanal</h2>
-        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+        <div class="header-actions header-actions--wrap">
           <select id="week-filter-sala" onchange="setWeekFilter('salaId', this.value)">
             <option value="">Todas as salas</option>
             ${salaFilterOptions}
@@ -120,7 +120,7 @@ function weeklyLegendHtml(list) {
   if (salasEmUso.length === 0) return "";
   const items = salasEmUso.map((s) => `
     <span class="legend-item">
-      <span class="color-dot" style="--dot-color:${salaColorVar(s.id)};background:${salaColorVar(s.id)};"></span>
+      <span class="color-dot" style="--dot-color:${salaColorVar(s.id)};"></span>
       ${escapeHtml(s.nome)}
     </span>`).join("");
   return `<div class="legend">${items}</div>`;

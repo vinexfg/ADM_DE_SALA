@@ -5,7 +5,7 @@ function renderDashboard() {
   const totalHoras = state.alocacoes.length;
 
   el.innerHTML = `
-    <div class="grid grid-4" style="margin-bottom:22px;">
+    <div class="grid grid-4 section-gap">
       <div class="card stat-card">
         <span class="stat-icon-badge" style="--tile-color:var(--cat-1)">🏫</span>
         <span class="stat-value">${state.salas.length}</span>

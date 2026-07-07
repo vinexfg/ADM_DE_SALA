@@ -24,7 +24,7 @@ function renderProfessores() {
     <div class="card">
       <div class="section-header">
         <h2>${state.professores.length} professor(es) cadastrado(s)</h2>
-        <div style="display:flex;gap:10px;align-items:center;">
+        <div class="header-actions">
           ${searchBoxHtml("professores", "Buscar professor…")}
           ${canManage ? `<button class="btn-primary" onclick="openProfessorForm()">+ Novo professor</button>` : ""}
         </div>

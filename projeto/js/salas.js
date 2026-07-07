@@ -8,7 +8,7 @@ function renderSalas() {
 
   const rows = filtradas.map((s) => `
     <tr>
-      <td><span class="name-with-dot"><span class="color-dot" style="--dot-color:${salaColorVar(s.id)};background:${salaColorVar(s.id)};"></span>${escapeHtml(s.nome)}</span></td>
+      <td><span class="name-with-dot"><span class="color-dot" style="--dot-color:${salaColorVar(s.id)};"></span>${escapeHtml(s.nome)}</span></td>
       <td class="muted-cell time-cell">${s.capacidade ?? "-"}</td>
       <td class="actions-cell">
         ${canManage ? `
@@ -24,7 +24,7 @@ function renderSalas() {
     <div class="card">
       <div class="section-header">
         <h2>${state.salas.length} sala(s) cadastrada(s)</h2>
-        <div style="display:flex;gap:10px;align-items:center;">
+        <div class="header-actions">
           ${searchBoxHtml("salas", "Buscar sala…")}
           ${canManage ? `<button class="btn-primary" onclick="openSalaForm()">+ Nova sala</button>` : ""}
         </div>
