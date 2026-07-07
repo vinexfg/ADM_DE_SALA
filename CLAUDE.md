@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `ADM_DE_SALA` é um protótipo de sistema de gestão de salas, turmas e horários escolares. Todo o código vive em `projeto/`. É uma aplicação client-side pura (HTML/CSS/JavaScript vanilla) sem framework, sem bundler e sem backend — os dados persistem apenas no `localStorage` do navegador.
 
+Na raiz do repositório, fora de `projeto/`, existem duas pastas que não fazem parte do código do app: `apresentacao/` (slides de apresentação em `.html`/`.mhtml`, gerados à parte) e `screenshots/` (imagens usadas pelo `README.md`). Não há relação de build entre elas e `projeto/`.
+
 ## Comandos
 
 Não há `package.json`, build step, linter ou suíte de testes configurados neste repositório.
@@ -18,7 +20,7 @@ Não há `package.json`, build step, linter ou suíte de testes configurados nes
 
 ### Carregamento de scripts (ordem importa)
 
-`index.html` carrega 12 arquivos de `projeto/js/` como `<script>` clássicos (sem `type="module"`), todos compartilhando o mesmo escopo global `window`. A ordem em `index.html` é:
+`index.html` carrega 13 arquivos de `projeto/js/` como `<script>` clássicos (sem `type="module"`), todos compartilhando o mesmo escopo global `window`. A ordem em `index.html` é:
 
 ```
 state.js → theme.js → helpers.js → ui.js → data-io.js → auth.js → nav.js →
@@ -39,7 +41,11 @@ Todo o estado da aplicação vive num único objeto global `state` (`{ salas, pr
 
 Não há virtual DOM nem diffing. Cada seção (`Dashboard`, `Salas`, `Professores`, `Turmas`, `Alocação`) tem uma função `renderX()` que reconstrói o `innerHTML` do container inteiro a partir de `state`, usando template strings. `renderSection(section)` (em `nav.js`) despacha para a função de render correta; `navigateTo(section)` troca a seção visível e chama `renderSection`. Depois de qualquer mutação de dados, o padrão é chamar `renderAll()` (que re-renderiza a seção atualmente visível).
 
-Formulários e confirmações usam um modal genérico (`js/ui.js`: `openModal`/`closeModal`/`openConfirm`) que injeta HTML no `#modal-body` e usa `onclick` inline apontando para funções globais (ex.: `onclick="saveTurma('${id}')"`) — por isso essas funções precisam estar no escopo global.
+Formulários e confirmações usam um modal genérico (`js/ui.js`: `openModal`/`closeModal`/`openConfirm`) que injeta HTML no `#modal-body` e usa `onclick` inline apontando para funções globais (ex.: `onclick="saveTurma('${id}')"`) — por isso essas funções precisam estar no escopo global. O modal também prende o foco (`trapFocus`, chamado a partir do listener de `keydown` em `main.js`) e devolve o foco ao elemento que o abriu quando fecha.
+
+### Feedback visual ao salvar (`_lastSavedIds`)
+
+Depois de qualquer `saveX()` bem-sucedido (`saveSala`, `saveProfessor`, `saveTurma`, `saveAlocacao`), a função grava o(s) id(s) recém-criado(s)/editado(s) em `_lastSavedIds` (`state.js`) antes de chamar `renderAll()`. Cada `renderX()` chama `consumeFlashIds()` (`helpers.js`) uma única vez no início — isso lê `_lastSavedIds` e já o zera, então o destaque (`flashClass()`, classe CSS `.row-flash`) só aparece na renderização imediatamente seguinte ao save, nunca em re-renders posteriores (busca, navegação, etc.).
 
 ### Autenticação e permissões (`js/auth.js`, `js/state.js`)
 
@@ -66,3 +72,9 @@ Assim como o JS, o CSS é dividido em 11 arquivos por assunto, carregados via `<
 Tema claro/escuro via atributo `data-theme` na tag `<html>` (alternado por `js/theme.js`, persistido em `localStorage`), com fallback para `prefers-color-scheme` quando não há preferência salva. Todas as cores são custom properties CSS redefinidas por tema (`tokens.css`). Existe uma paleta categórica fixa (`--cat-1` a `--cat-8`) usada para colorir salas de forma consistente em toda a UI (lista de salas, tabela de alocação, grade semanal) — a cor de cada sala é derivada da sua posição no array `state.salas` (`salaColorVar()` em `js/helpers.js`) e passada via a custom property `--dot-color`/`--slot-color`/`--tile-color` inline no HTML gerado; a cor em si nunca é armazenada no dado. Todas as unidades de tamanho usam `rem` (base 16px), não `px`.
 
 Classes utilitárias para evitar `style="..."` inline nos arquivos JS: `.header-actions` / `.header-actions--wrap` (agrupar busca + botão no cabeçalho de seção), `.section-gap` (espaçamento entre cards), `.cell-strong` (célula de tabela em negrito), `.confirm-message` (texto do modal de confirmação). Inline `style="--dot-color:...;"` etc. só é usado para valores realmente dinâmicos (cor calculada por item); qualquer outro estilo repetido deve virar classe em `components.css` em vez de inline no JS.
+
+O dashboard também tem um gráfico de barras simples (`weekdayBarChartHtml()` em `dashboard.js`, estilos `.bar-*` em `components.css`) — é HTML/CSS puro (sem canvas/SVG/lib), altura de cada `.bar` calculada em `%` a partir da contagem de alocações por dia.
+
+### Responsividade da sidebar (`css/layout.css`, `js/main.js`)
+
+Abaixo de `60rem` (960px) a `.sidebar` some da tela (`transform: translateX(-100%)`) e vira um menu retrátil: um botão `#menu-toggle-btn` (só visível nesse breakpoint) mostra a sidebar por cima do conteúdo com um backdrop escurecido (`#sidebar-backdrop`). `openSidebar()`/`closeSidebar()` (`main.js`) alternam a classe `.open` na sidebar e `.hidden` no backdrop; clicar num item de navegação ou no backdrop fecha a gaveta. Acima do breakpoint essas classes não têm efeito — a sidebar volta a ser um bloco fixo no layout normal. Tabelas (`Salas`, `Professores`, `Turmas`, `Alocação`) ficam envolvidas por `.table-scroll` (`overflow-x: auto`) como rede de segurança em telas muito estreitas.
