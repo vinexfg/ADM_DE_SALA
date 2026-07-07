@@ -9,7 +9,6 @@
 </head>
 <body>
 
-  <!-- TELA DE LOGIN -->
   <div id="login-screen" class="login-screen">
     <button id="login-theme-toggle" class="theme-toggle" title="Alternar tema">🌙</button>
     <div class="login-card">
@@ -26,7 +25,6 @@
     </div>
   </div>
 
-  <!-- APLICAÇÃO -->
   <div id="app-screen" class="app-screen hidden">
     <aside class="sidebar">
       <div class="sidebar-header">
@@ -42,6 +40,9 @@
       </nav>
       <div class="sidebar-footer">
         <div class="role-badge" id="role-badge">Administração</div>
+        <button id="export-data-btn" class="btn-ghost btn-block">⬇ Exportar dados</button>
+        <button id="import-data-btn" class="btn-ghost btn-block hidden">⬆ Importar dados</button>
+        <input type="file" id="import-file-input" accept="application/json" class="hidden">
         <button id="reset-data-btn" class="btn-ghost btn-block hidden">↺ Restaurar dados de exemplo</button>
         <button id="logout-btn" class="btn-secondary btn-block">Sair</button>
       </div>
@@ -63,12 +64,11 @@
     </main>
   </div>
 
-  <!-- MODAL GENÉRICO -->
   <div id="modal-overlay" class="modal-overlay hidden">
-    <div class="modal">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-title" tabindex="-1">
       <div class="modal-header">
         <h2 id="modal-title">Título</h2>
-        <button id="modal-close" class="modal-close" title="Fechar">✕</button>
+        <button id="modal-close" class="modal-close" title="Fechar" aria-label="Fechar">✕</button>
       </div>
       <div id="modal-body" class="modal-body"></div>
     </div>
@@ -76,6 +76,18 @@
 
   <div id="toast-container" class="toast-container"></div>
 
-  <script src="app.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/theme.js"></script>
+  <script src="js/helpers.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/data-io.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/salas.js"></script>
+  <script src="js/professores.js"></script>
+  <script src="js/turmas.js"></script>
+  <script src="js/alocacao.js"></script>
+  <script src="js/main.js"></script>
 </body>
 </html>
